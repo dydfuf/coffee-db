@@ -6,6 +6,8 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+type DialogProps = DialogPrimitive.DialogProps;
+
 const Dialog = DialogPrimitive.Root;
 
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -119,4 +121,5 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  type DialogProps,
 };
