@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-gen": "npx supabase gen types typescript --project-id bjhjdwmabljktwfeijyi > database-generated.types.ts "
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -62,6 +63,7 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "type-fest": "^4.26.1",
     "vaul": "^1.1.0",
     "zod": "^3.23.8"
   },
