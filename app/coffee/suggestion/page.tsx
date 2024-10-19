@@ -1,7 +1,7 @@
 "use client";
 
 import { experimental_useObject as useObject } from "ai/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { coffeeSchema } from "@/schema/coffee";
 import { uploadImage } from "./actions";
 
