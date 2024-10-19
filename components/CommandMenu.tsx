@@ -9,17 +9,16 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { DialogProps } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
-import { CoffeeInfo, CoffeeInfoField } from "../types/coffee";
 import { Badge } from "@/components/ui/badge";
 import { hangulIncludes, chosungIncludes } from "@toss/hangul";
 import { usePathname, useRouter } from "next/navigation";
+import { Coffee } from "@/schema/coffee";
 
-interface Props extends DialogProps {
+interface Props {
   isInNav?: boolean;
-  list: CoffeeInfo[];
+  list: Coffee[];
 }
 
 export default function CommandMenu({ isInNav, list, ...props }: Props) {
@@ -88,33 +87,28 @@ export default function CommandMenu({ isInNav, list, ...props }: Props) {
         }}
         open={open}
         onOpenChange={setOpen}
-        dialogContentClassName="top-0 translate-y-0 md:top-1/2 md:-translate-y-1/2"
       >
         <CommandInput placeholder="원두 이름 및 노트를 입력 해보세요. 🚀" />
         <CommandList className="max-h-[80dvh]">
-          <CommandEmpty>정보를 찾을 수 없어요. 😭</CommandEmpty>{" "}
+          <CommandEmpty>정보를 찾을 수 없어요. 😭</CommandEmpty>
           <CommandGroup heading={"원두 정보"}>
             {list.map((coffeeInfo) => (
               <CommandItem
-                key={coffeeInfo[CoffeeInfoField.ID]}
+                key={`command-menu-item-${coffeeInfo.id}`}
                 value={getCoffeeItemValue(coffeeInfo)}
                 onSelect={() => {
                   runCommand(() => {
-                    router.push(
-                      `/coffee/${coffeeInfo[CoffeeInfoField.ID].split("-")[1]}`
-                    );
+                    router.push(`/coffee/${coffeeInfo.id}`);
                   });
                 }}
               >
-                <div className="flex flex-col">
-                  <p className="text-xl">
-                    {coffeeInfo[CoffeeInfoField.NAME_KR]}
-                  </p>
+                <div className="flex flex-col cursor-pointer">
+                  <p className="text-xl">{coffeeInfo.name_kr}</p>
                   <p className="text-sm text-muted-foreground">
-                    {coffeeInfo[CoffeeInfoField.NAME_EN]}
+                    {coffeeInfo.name_en}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {coffeeInfo[CoffeeInfoField.NOTE].split(",").map((note) => (
+                    {coffeeInfo.notes?.map((note) => (
                       <Badge key={note} variant={"outline"}>
                         {note}
                       </Badge>
@@ -130,17 +124,17 @@ export default function CommandMenu({ isInNav, list, ...props }: Props) {
   );
 }
 
-const getCoffeeItemValue = (coffeeInfo: CoffeeInfo) =>
-  coffeeInfo[CoffeeInfoField.NAME_KR] +
+const getCoffeeItemValue = (coffeeInfo: Coffee) =>
+  coffeeInfo.name_kr +
   " " +
-  coffeeInfo[CoffeeInfoField.NAME_EN] +
+  coffeeInfo.name_en +
   " " +
-  coffeeInfo[CoffeeInfoField.REGION] +
+  coffeeInfo.origin +
   " " +
-  coffeeInfo[CoffeeInfoField.FARM] +
+  coffeeInfo.farm +
   " " +
-  coffeeInfo[CoffeeInfoField.VARIETY] +
+  coffeeInfo.variety +
   " " +
-  coffeeInfo[CoffeeInfoField.PROCESS] +
+  coffeeInfo.processing +
   " " +
-  coffeeInfo[CoffeeInfoField.NOTE];
+  (coffeeInfo.notes?.join(",") ?? "");

@@ -13,42 +13,41 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 interface Props {
   allNations: string[];
   allNotes: string[];
   selectedNations: string[];
-  onSelectedNationsChange: (value: string[]) => void;
   selectedNotes: string[];
-  onSelectedNotesChange: (value: string[]) => void;
 }
 
 export default function MobileCoffeeFilter({
   allNations,
   allNotes,
   selectedNations: _selectedNations,
-  onSelectedNationsChange,
   selectedNotes: _selectedNotes,
-  onSelectedNotesChange,
 }: Props) {
   const [selectedNations, setSelectedNations] =
     useState<string[]>(_selectedNations);
   const [selectedNotes, setSelectedNotes] = useState<string[]>(_selectedNotes);
-  const [defaultNationValue, setDefaultNationValue] =
-    useState(_selectedNations);
-  const [defaultNoteValue, setDefaultNoteValue] = useState(_selectedNotes);
 
-  useEffect(() => {
-    setDefaultNationValue(_selectedNations);
-    setDefaultNoteValue(_selectedNotes);
-  }, [_selectedNations, _selectedNotes]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const onCloseNationsDrawer = () => {
-    onSelectedNationsChange(selectedNations);
+    router.replace(`/coffee/list?nation=${selectedNations.join(",")}`);
   };
   const onCloseNotesDrawer = () => {
-    onSelectedNotesChange(selectedNotes);
+    const currentNation = searchParams.get("nation");
+    if (currentNation) {
+      router.replace(
+        `/coffee/list?nation=${currentNation}&note=${selectedNotes.join(",")}`
+      );
+    } else {
+      router.replace(`/coffee/list?note=${selectedNotes.join(",")}`);
+    }
   };
 
   const nationFilterButtonLabel =
@@ -75,7 +74,7 @@ export default function MobileCoffeeFilter({
                 type="multiple"
                 className="flex flex-wrap gap-2 justify-start"
                 onValueChange={setSelectedNations}
-                defaultValue={defaultNationValue}
+                defaultValue={_selectedNations}
               >
                 {allNations.map((nation) => (
                   <ToggleGroupItem
@@ -116,7 +115,7 @@ export default function MobileCoffeeFilter({
                   type="multiple"
                   className="flex flex-wrap gap-2 justify-start"
                   onValueChange={setSelectedNotes}
-                  defaultValue={defaultNoteValue}
+                  defaultValue={_selectedNotes}
                 >
                   {allNotes.map((note) => (
                     <ToggleGroupItem

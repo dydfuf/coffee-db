@@ -17,10 +17,12 @@ export type Database = {
           id: number
           name_en: string | null
           name_kr: string | null
+          nations: string | null
           notes: string[] | null
           origin: string | null
           origin_image_uri: string | null
           processing: string | null
+          source_origin_url: string | null
           variety: string | null
         }
         Insert: {
@@ -30,10 +32,12 @@ export type Database = {
           id?: number
           name_en?: string | null
           name_kr?: string | null
+          nations?: string | null
           notes?: string[] | null
           origin?: string | null
           origin_image_uri?: string | null
           processing?: string | null
+          source_origin_url?: string | null
           variety?: string | null
         }
         Update: {
@@ -43,10 +47,12 @@ export type Database = {
           id?: number
           name_en?: string | null
           name_kr?: string | null
+          nations?: string | null
           notes?: string[] | null
           origin?: string | null
           origin_image_uri?: string | null
           processing?: string | null
+          source_origin_url?: string | null
           variety?: string | null
         }
         Relationships: []
