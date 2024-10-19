@@ -1,24 +1,19 @@
-import { CoffeeInfoField, CoffeeInfo } from "../types/coffee";
+import { Coffee } from "@/schema/coffee";
 
-export const getAllNationByCoffeeInfoList = (coffeeInfoList: CoffeeInfo[]) => {
-  const nations = coffeeInfoList.map(
-    (coffeeInfo) => coffeeInfo[CoffeeInfoField.NATION]
-  );
+export const getAllNationByCoffeeInfoList = (coffeeInfoList: Coffee[]) => {
+  const nations = coffeeInfoList.map((coffeeInfo) => coffeeInfo.nations ?? "");
 
   return Array.from(new Set(nations));
 };
 
 export const getAllNotesByCoffeeInfoList = (
-  coffeeInfoList: CoffeeInfo[],
+  coffeeInfoList: Coffee[],
   selectedNations: string[]
 ) => {
   const notes = coffeeInfoList
-    .filter((coffeeInfo) =>
-      selectedNations.includes(coffeeInfo[CoffeeInfoField.NATION])
-    )
-    .map((coffeeInfo) => coffeeInfo[CoffeeInfoField.NOTE_FOR_FILTER])
-    .join(",")
-    .split(",")
+    .filter((coffeeInfo) => selectedNations.includes(coffeeInfo.nations ?? ""))
+    .map((coffeeInfo) => coffeeInfo.notes ?? [])
+    .flat()
     .filter((note) => note)
     .map((note) => note.trim())
     .sort((a, b) => a.localeCompare(b));

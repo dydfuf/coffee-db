@@ -12,6 +12,8 @@ export const coffeeSchema = z.object({
   altitude: z.string().nullable(),
   origin_image_uri: z.string().nullable(),
   created_at: z.string(),
+  source_origin_url: z.string().nullable(),
+  nations: z.string().nullable(),
 });
 
 export type Coffee = z.infer<typeof coffeeSchema>;

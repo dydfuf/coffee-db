@@ -139,10 +139,6 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
         <GoogleAnalytics gaId="G-DCEDCJ9EXD" />
-        {/* <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-DCEDCJ9EXD"
-        ></script> */}
         <script
           dangerouslySetInnerHTML={{
             __html: `

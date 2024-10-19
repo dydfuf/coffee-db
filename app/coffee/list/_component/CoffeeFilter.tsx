@@ -8,24 +8,20 @@ import {
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   allNations: string[];
   allNotes: string[];
   selectedNations: string[];
-  onSelectedNationsChange: (value: string[]) => void;
   selectedNotes: string[];
-  onSelectedNotesChange: (value: string[]) => void;
 }
 
 export default function CoffeeFilter({
   allNations,
   allNotes,
   selectedNations,
-  onSelectedNationsChange,
   selectedNotes,
-  onSelectedNotesChange,
 }: Props) {
   const nationFilterButtonLabel =
     selectedNations.length > 0
@@ -36,13 +32,19 @@ export default function CoffeeFilter({
       ? `노트별 필터 | ${selectedNotes.join(", ")}`
       : "노트별 필터";
 
-  const [defaultNationValue, setDefaultNationValue] = useState(selectedNations);
-  const [defaultNoteValue, setDefaultNoteValue] = useState(selectedNotes);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    setDefaultNationValue(selectedNations);
-    setDefaultNoteValue(selectedNotes);
-  }, [selectedNations, selectedNotes]);
+  const handleNationChange = (value: string[]) => {
+    router.replace(`/coffee/list?nation=${value.join(",")}`);
+  };
+
+  const handleNoteChange = (value: string[]) => {
+    const currentNation = searchParams.get("nation");
+    router.replace(
+      `/coffee/list?nation=${currentNation}&note=${value.join(",")}`
+    );
+  };
 
   return (
     <Accordion
@@ -61,8 +63,8 @@ export default function CoffeeFilter({
             <ToggleGroup
               type="multiple"
               className="flex flex-wrap gap-2 justify-start"
-              onValueChange={onSelectedNationsChange}
-              defaultValue={defaultNationValue}
+              onValueChange={handleNationChange}
+              defaultValue={selectedNations}
             >
               {allNations.map((nation) => (
                 <ToggleGroupItem
@@ -89,8 +91,8 @@ export default function CoffeeFilter({
               <ToggleGroup
                 type="multiple"
                 className="flex flex-wrap gap-2 justify-start"
-                onValueChange={onSelectedNotesChange}
-                defaultValue={defaultNoteValue}
+                onValueChange={handleNoteChange}
+                defaultValue={selectedNotes}
               >
                 {allNotes.map((note) => (
                   <ToggleGroupItem key={note} value={note} variant={"outline"}>
