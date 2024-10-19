@@ -1,50 +1,86 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { insertCoffeeInfo } from "./actions";
+import { experimental_useObject as useObject } from "ai/react";
+import { useEffect, useRef, useState } from "react";
+import { coffeeSchema } from "@/schema/coffee";
+import { uploadImage } from "./actions";
 
 export default function SuggestionPage() {
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const { object, submit: handleObjectSubmit } = useObject({
+    api: "/api/chat",
+    schema: coffeeSchema,
+  });
 
-    const formData = new FormData(e.target as HTMLFormElement);
-    const data = Object.fromEntries(formData.entries());
+  const [files, setFiles] = useState<FileList | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    await insertCoffeeInfo({
-      name_kr: data.name_kr as string,
-      name_en: data.name_en as string,
-      processing: data.processing as string,
-      origin: data.origin as string,
-      farm: data.farm as string,
-      notes: (data.notes as string).split(","),
-      variety: data.variety as string,
-      altitude: data.altitude as string,
-    });
-    console.log(data);
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    const items = event.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === "file" && item.type.startsWith("image/")) {
+        const file = item.getAsFile();
+
+        if (file) {
+          setFiles(new DataTransfer().files);
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          setFiles(dataTransfer.files);
+        }
+      }
+    }
   };
 
   return (
     <div>
       SuggestionPage
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <input type="text" name="name_kr" />
-        <label htmlFor="name_kr">한국어 이름</label>
-        <input type="text" name="name_en" />
-        <label htmlFor="name_en">영어 이름</label>
-        <input type="text" name="processing" />
-        <label htmlFor="processing">처리 방법</label>
-        <input type="text" name="origin" />
-        <label htmlFor="origin">원산지</label>
-        <input type="text" name="farm" />
-        <label htmlFor="farm">농장</label>
-        <input type="text" name="notes" />
-        <label htmlFor="notes">노트</label>
-        <input type="text" name="variety" />
-        <label htmlFor="variety">종류</label>
-        <input type="text" name="altitude" />
-        <label htmlFor="altitude">고도</label>
-        <Button type="submit">제출</Button>
-      </form>
+      <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+        {object && <pre>{JSON.stringify(object, null, 2)}</pre>}
+
+        <form
+          onSubmit={async (event) => {
+            event.preventDefault();
+            if (!files || files.length === 0) {
+              return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", files[0]);
+            const imageUrl = await uploadImage(formData);
+
+            handleObjectSubmit({
+              messages: [
+                {
+                  role: "user",
+                  content: [
+                    {
+                      type: "text",
+                      text: "다음 이미지를 분석하여, 커피관련 정보를 추출하세요.",
+                    },
+                    {
+                      type: "image",
+                      image: new URL(imageUrl),
+                    },
+                  ],
+                },
+              ],
+            });
+
+            setFiles(undefined);
+
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          }}
+          className="fixed bottom-0 w-full max-w-md mb-8 border border-gray-300 rounded shadow-xl"
+        >
+          {files && files.length > 0 && files[0] instanceof File && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={URL.createObjectURL(files[0])} alt="업로드된 이미지" />
+          )}
+          <input className="w-full p-2" onPaste={handlePaste} />
+        </form>
+      </div>
     </div>
   );
 }
