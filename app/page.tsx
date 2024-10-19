@@ -5,7 +5,7 @@ import CommandMenu from "../components/CommandMenu";
 import { getCoffeeInfoList } from "../utils/api";
 
 export default async function Home() {
-  const coffeeInfoList = getCoffeeInfoList();
+  const coffeeInfoList = await getCoffeeInfoList();
 
   return (
     <div className="mx-auto grow flex w-full">
