@@ -44,15 +44,19 @@ export default async function CoffeeListPage({
   };
 
   const filterByNotes = (coffeeInfo: Coffee) => {
-    const hasSelectedNotes = selectedNotes.length > 0;
-    if (hasSelectedNotes) {
-      return coffeeInfo.notes
-        ? coffeeInfo.notes.some((note) =>
-            selectedNotes.includes(COFFEE_NOTE_DICT[note])
-          )
-        : false;
+    if (selectedNotes.length === 0) {
+      return true;
     }
-    return true;
+
+    if (!coffeeInfo.notes) {
+      return false;
+    }
+
+    return coffeeInfo.notes.some(
+      (note) =>
+        selectedNotes.includes(COFFEE_NOTE_DICT[note]) ||
+        selectedNotes.includes(note)
+    );
   };
 
   const filteredCoffeeInfoList = coffeeInfoList

@@ -41,9 +41,13 @@ export default function MobileCoffeeFilter({
   };
   const onCloseNotesDrawer = () => {
     const currentNation = searchParams.get("nation");
-    router.replace(
-      `/coffee/list?nation=${currentNation}&note=${selectedNotes.join(",")}`
-    );
+    if (currentNation) {
+      router.replace(
+        `/coffee/list?nation=${currentNation}&note=${selectedNotes.join(",")}`
+      );
+    } else {
+      router.replace(`/coffee/list?note=${selectedNotes.join(",")}`);
+    }
   };
 
   const nationFilterButtonLabel =
