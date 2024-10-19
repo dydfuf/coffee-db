@@ -7,6 +7,7 @@ import { CoffeeLinkCard } from "./_component/CoffeeLinkCard";
 import CoffeeFilter from "./_component/CoffeeFilter";
 import { Coffee } from "@/schema/coffee";
 import MobileCoffeeFilter from "./_component/MobileCoffeeFilter";
+import { COFFEE_NOTE_DICT } from "@/constants/coffee";
 
 interface Props {
   searchParams: {
@@ -46,7 +47,9 @@ export default async function CoffeeListPage({
     const hasSelectedNotes = selectedNotes.length > 0;
     if (hasSelectedNotes) {
       return coffeeInfo.notes
-        ? coffeeInfo.notes.some((note) => selectedNotes.includes(note))
+        ? coffeeInfo.notes.some((note) =>
+            selectedNotes.includes(COFFEE_NOTE_DICT[note])
+          )
         : false;
     }
     return true;

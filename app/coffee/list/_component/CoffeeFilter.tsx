@@ -41,9 +41,13 @@ export default function CoffeeFilter({
 
   const handleNoteChange = (value: string[]) => {
     const currentNation = searchParams.get("nation");
-    router.replace(
-      `/coffee/list?nation=${currentNation}&note=${value.join(",")}`
-    );
+    if (currentNation) {
+      router.replace(
+        `/coffee/list?nation=${currentNation}&note=${value.join(",")}`
+      );
+    } else {
+      router.replace(`/coffee/list?note=${value.join(",")}`);
+    }
   };
 
   return (
