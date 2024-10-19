@@ -19,6 +19,7 @@ export type Database = {
           name_kr: string | null
           notes: string[] | null
           origin: string | null
+          origin_image_uri: string | null
           processing: string | null
           variety: string | null
         }
@@ -31,6 +32,7 @@ export type Database = {
           name_kr?: string | null
           notes?: string[] | null
           origin?: string | null
+          origin_image_uri?: string | null
           processing?: string | null
           variety?: string | null
         }
@@ -43,6 +45,7 @@ export type Database = {
           name_kr?: string | null
           notes?: string[] | null
           origin?: string | null
+          origin_image_uri?: string | null
           processing?: string | null
           variety?: string | null
         }
