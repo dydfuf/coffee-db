@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { getCoffeeInfoById } from "../../../utils/api";
+import { createClient } from "@/utils/supabase/client";
 
 export async function generateMetadata(
   { params }: Props,
@@ -39,6 +40,21 @@ type Props = {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("coffee-info").select("id");
+
+  if (error) {
+    return [];
+  }
+
+  return data.map((coffeeInfo) => ({
+    id: String(coffeeInfo.id),
+  }));
+}
 
 export default async function page({ params: { id } }: Props) {
   const coffeeInfo = await getCoffeeInfoById(id);
