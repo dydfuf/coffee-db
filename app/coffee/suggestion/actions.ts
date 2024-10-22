@@ -8,11 +8,13 @@ export async function insertCoffeeInfo(
 ) {
   const supabase = createClient();
 
-  const { error } = await supabase.from("coffee-info").insert(coffeeInfo);
+  const { data, error } = await supabase.from("coffee-info").insert(coffeeInfo);
 
   if (error) {
     throw error;
   }
+
+  return data;
 }
 
 const getUploadUrl = async () => {
