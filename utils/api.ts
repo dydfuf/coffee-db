@@ -1,5 +1,6 @@
 "use server";
 
+import { notFound } from "next/navigation";
 import { createClient } from "./supabase/server";
 
 export const getCoffeeInfoList = async () => {
@@ -21,6 +22,10 @@ export const getCoffeeInfoById = async (id: string) => {
     .from("coffee-info")
     .select("*")
     .eq("id", id);
+
+  if (!data || data.length === 0) {
+    notFound();
+  }
 
   if (error) {
     throw error;

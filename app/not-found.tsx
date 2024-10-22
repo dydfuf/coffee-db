@@ -21,23 +21,25 @@ export default function GlobalNotFoundPage() {
 
       <h3 className="text-xl font-semibold">아래 원두는 어때요?</h3>
       <Link
-        href={`/coffee/127`}
+        href={`/coffee/279`}
         className="flex flex-col p-8 border-[1px] rounded-lg hover:bg-accent hover:text-accent-foreground w-full md:w-[400px]"
       >
         <div className="flex flex-col">
-          <p className="text-xl">에티오피아 예가체프 아리차 워시드</p>
+          <p className="text-xl">에티오피아 게이샤 빌리지 내추럴</p>
           <p className="text-sm text-muted-foreground">
-            Ethiopia Yirgacheffe Aricha Washed
+            Ethiopia Gesha Village Natural
           </p>
           <div className="flex flex-wrap gap-2 mt-2">
-            {["플로럴", "살구", "블루베리", "오렌지"].map((note) => (
-              <NoteBadge key={note}>{note}</NoteBadge>
-            ))}
+            {["말린 재스민", "블랙티", "애플망고", "라즈베리", "복숭아"].map(
+              (note) => (
+                <NoteBadge key={note}>{note}</NoteBadge>
+              )
+            )}
           </div>
         </div>
       </Link>
       <Link
-        href={`/coffee/141`}
+        href={`/coffee/276`}
         className="flex flex-col p-8 border-[1px] rounded-lg hover:bg-accent hover:text-accent-foreground w-full md:w-[400px]"
       >
         <div className="flex flex-col">
