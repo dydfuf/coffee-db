@@ -3,7 +3,9 @@
 import { experimental_useObject as useObject } from "ai/react";
 import { useRef, useState } from "react";
 import { coffeeSchema } from "@/schema/coffee";
-import { uploadImage } from "./actions";
+import SuggestionForm from "./_component/SuggestionForm";
+import { CoffeeSuggestionForm } from "./_schema";
+import { insertCoffeeInfo } from "./actions";
 
 export default function SuggestionPage() {
   const { object, submit: handleObjectSubmit } = useObject({
@@ -31,9 +33,29 @@ export default function SuggestionPage() {
     }
   };
 
+  const handleSubmit = async (data: CoffeeSuggestionForm) => {
+    await insertCoffeeInfo(data);
+    alert("추가되었습니다.");
+  };
+
   return (
-    <div>
-      SuggestionPage
+    <div className="mx-auto">
+      <SuggestionForm
+        defaultValues={{
+          name_en: object?.name_en ?? "",
+          name_kr: object?.name_kr ?? "",
+          processing: object?.processing ?? "",
+          origin: object?.origin ?? "",
+          farm: object?.farm ?? "",
+          variety: object?.variety ?? "",
+          altitude: object?.altitude ?? "",
+          notes: object?.notes?.filter((note) => note !== undefined) ?? [],
+          source_origin_url: object?.source_origin_url ?? "",
+          nations: object?.name_kr?.split(" ")[0] ?? "",
+        }}
+        handleSubmit={handleSubmit}
+      />
+
       <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
         {object && <pre>{JSON.stringify(object, null, 2)}</pre>}
 
@@ -46,7 +68,6 @@ export default function SuggestionPage() {
 
             const formData = new FormData();
             formData.append("file", files[0]);
-            const imageUrl = await uploadImage(formData);
 
             handleObjectSubmit({
               messages: [
@@ -59,7 +80,17 @@ export default function SuggestionPage() {
                     },
                     {
                       type: "image",
-                      image: new URL(imageUrl),
+                      image: `data:image/png;base64,${await(async (file) => {
+                        return new Promise<string>((resolve, reject) => {
+                          const reader = new FileReader();
+                          reader.readAsDataURL(file);
+                          reader.onload = () =>
+                            resolve(
+                              reader.result?.toString().split(",")[1] || ""
+                            );
+                          reader.onerror = (error) => reject(error);
+                        });
+                      })(files[0])}`,
                     },
                   ],
                 },

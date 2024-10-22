@@ -16,4 +16,5 @@ export const coffeeSchema = z.object({
   nations: z.string().nullable(),
 });
 
+
 export type Coffee = z.infer<typeof coffeeSchema>;
