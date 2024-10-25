@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { hangulIncludes, chosungIncludes } from "@toss/hangul";
+import { disassemble, getChoseong } from "es-hangul";
 import { usePathname, useRouter } from "next/navigation";
 import { Coffee } from "@/schema/coffee";
 
@@ -138,3 +138,16 @@ const getCoffeeItemValue = (coffeeInfo: Coffee) =>
   coffeeInfo.processing +
   " " +
   (coffeeInfo.notes?.join(",") ?? "");
+
+const hangulIncludes = (x: string, y: string) => {
+  const disassembledX = disassemble(x);
+  const disassembledY = disassemble(y);
+
+  return disassembledX.includes(disassembledY);
+};
+
+const chosungIncludes = (x: string, y: string) => {
+  const choseongedX = getChoseong(x);
+
+  return choseongedX.includes(y);
+};
