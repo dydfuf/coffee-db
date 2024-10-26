@@ -57,9 +57,9 @@ export default async function page({ params: { id } }: Props) {
       isLink: false,
     },
     {
-      key: CoffeeInfoField.PROCESS,
-      label: "Process",
-      value: coffeeInfo.processing,
+      key: CoffeeInfoField.NATION,
+      label: "Nation",
+      value: coffeeInfo.nations,
       isLink: false,
     },
 
@@ -76,12 +76,23 @@ export default async function page({ params: { id } }: Props) {
       isLink: false,
     },
     {
+      key: CoffeeInfoField.ALTITUDE,
+      label: "Altitude",
+      value: coffeeInfo.altitude,
+      isLink: false,
+    },
+    {
+      key: CoffeeInfoField.PROCESS,
+      label: "Process",
+      value: coffeeInfo.processing,
+      isLink: false,
+    },
+    {
       key: CoffeeInfoField.VARIETY,
       label: "Variety",
       value: coffeeInfo.variety,
       isLink: false,
     },
-
     {
       key: CoffeeInfoField.SOURCE,
       label: "Source",
