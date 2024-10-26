@@ -12,6 +12,7 @@ export enum CoffeeInfoField {
   NATION = "국가",
   NOTE_FOR_FILTER = "노트(필터)",
   LAST_EDITED_TIME = "Last edited time",
+  ALTITUDE = "재배고도",
 }
 
 export type CoffeeInfo = {
