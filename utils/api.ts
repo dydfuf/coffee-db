@@ -6,7 +6,10 @@ import { createClient } from "./supabase/server";
 export const getCoffeeInfoList = async () => {
   const supabase = createClient();
 
-  const { data, error } = await supabase.from("coffee-info").select("*");
+  const { data, error } = await supabase
+    .from("coffee-info")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw error;
