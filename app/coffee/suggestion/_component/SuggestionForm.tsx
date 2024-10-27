@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { coffeeSuggestionSchema, CoffeeSuggestionForm } from "../_schema";
+import { Loader2 } from "lucide-react";
 
 interface SuggestionFormProps {
   defaultValues?: CoffeeSuggestionForm;
@@ -114,7 +115,7 @@ export default function SuggestionForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-2 gap-4"
+        className="grid grid-cols-2 gap-4 border border-gray-300 rounded p-4 relative"
       >
         {formFieldItems.map((fieldItem) => (
           <FormField
@@ -137,6 +138,7 @@ export default function SuggestionForm({
                     placeholder={fieldItem.placeholder}
                     {...field}
                     value={field.value ?? ""}
+                    disabled={form.formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -148,6 +150,12 @@ export default function SuggestionForm({
         <Button type="submit" className="col-span-2">
           제출
         </Button>
+
+        {form.formState.isSubmitting && (
+          <div className="inset-0 absolute bg-black/50 backdrop-blur-sm flex items-center justify-center rounded">
+            <Loader2 className="animate-spin" width={32} height={32} />
+          </div>
+        )}
       </form>
     </Form>
   );
