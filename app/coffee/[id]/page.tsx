@@ -126,7 +126,7 @@ export default async function page({ params: { id } }: Props) {
                 정보 출처
               </Link>
             ) : (
-              <span className="text-muted-foreground">{data.value}</span>
+              <span className="text-muted-foreground">{data.value || '-'}</span>
             )}
           </div>
         ))}
