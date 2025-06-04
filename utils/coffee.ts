@@ -2,7 +2,9 @@ import { getSegmentedNote } from "@/constants/coffee";
 import { Coffee } from "@/schema/coffee";
 
 export const getAllNationByCoffeeInfoList = (coffeeInfoList: Coffee[]) => {
-  const nations = coffeeInfoList.map((coffeeInfo) => coffeeInfo.nations ?? "");
+  const nations = coffeeInfoList
+    .map((coffeeInfo) => coffeeInfo.nations?.trim())
+    .filter((nation): nation is string => Boolean(nation));
 
   return Array.from(new Set(nations));
 };
