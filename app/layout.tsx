@@ -2,6 +2,9 @@ import "./globals.css";
 import { TailwindIndicator } from "../components/TailwindIndicator";
 import { ThemeProvider } from "../components/ThemeProvider";
 import SiteHeader from "../components/SiteHeader";
+import SessionCheck from "../components/SessionCheck";
+import LoadingHome from "./loading";
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { siteConfig } from "../constants/siteConfig";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -158,11 +161,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col bg-background">
-            <SiteHeader />
-            <main className="flex-1 flex">{children}</main>
-            <TailwindIndicator />
-          </div>
+          <Suspense fallback={<LoadingHome />}>
+            <SessionCheck>
+              <div className="relative flex min-h-screen flex-col bg-background">
+                <SiteHeader />
+                <main className="flex-1 flex">{children}</main>
+                <TailwindIndicator />
+              </div>
+            </SessionCheck>
+          </Suspense>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
