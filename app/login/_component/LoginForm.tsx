@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { login } from "../actions";
 
 const loginFormSchema = z.object({
@@ -38,7 +39,7 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 relative">
         <FormField
           control={form.control}
           name="email"
@@ -72,8 +73,16 @@ export default function LoginForm() {
           className="w-full"
           disabled={form.formState.isSubmitting}
         >
+          {form.formState.isSubmitting && (
+            <Loader2 className="animate-spin mr-2 h-4 w-4" />
+          )}
           로그인
         </Button>
+        {form.formState.isSubmitting && (
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center rounded">
+            <Loader2 className="animate-spin" width={32} height={32} />
+          </div>
+        )}
       </form>
     </Form>
   );
