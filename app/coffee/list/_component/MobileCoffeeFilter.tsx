@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { buildListUrl, parseCriteriaFromQuery } from "@/utils/coffee-filters";
 
 interface Props {
   allNations: string[];
@@ -37,17 +38,20 @@ export default function MobileCoffeeFilter({
   const searchParams = useSearchParams();
 
   const onCloseNationsDrawer = () => {
-    router.replace(`/coffee/list?nation=${selectedNations.join(",")}`);
+    const criteria = parseCriteriaFromQuery(
+      searchParams.get("nation"),
+      searchParams.get("note")
+    );
+    const next = buildListUrl({ ...criteria, nations: selectedNations });
+    router.replace(next);
   };
   const onCloseNotesDrawer = () => {
-    const currentNation = searchParams.get("nation");
-    if (currentNation) {
-      router.replace(
-        `/coffee/list?nation=${currentNation}&note=${selectedNotes.join(",")}`
-      );
-    } else {
-      router.replace(`/coffee/list?note=${selectedNotes.join(",")}`);
-    }
+    const criteria = parseCriteriaFromQuery(
+      searchParams.get("nation"),
+      searchParams.get("note")
+    );
+    const next = buildListUrl({ ...criteria, notes: selectedNotes });
+    router.replace(next);
   };
 
   const nationFilterButtonLabel =

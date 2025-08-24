@@ -9,6 +9,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useRouter, useSearchParams } from "next/navigation";
+import { buildListUrl, parseCriteriaFromQuery } from "@/utils/coffee-filters";
 
 interface Props {
   allNations: string[];
@@ -36,18 +37,21 @@ export default function CoffeeFilter({
   const searchParams = useSearchParams();
 
   const handleNationChange = (value: string[]) => {
-    router.replace(`/coffee/list?nation=${value.join(",")}`);
+    const criteria = parseCriteriaFromQuery(
+      searchParams.get("nation"),
+      searchParams.get("note")
+    );
+    const next = buildListUrl({ ...criteria, nations: value });
+    router.replace(next);
   };
 
   const handleNoteChange = (value: string[]) => {
-    const currentNation = searchParams.get("nation");
-    if (currentNation) {
-      router.replace(
-        `/coffee/list?nation=${currentNation}&note=${value.join(",")}`
-      );
-    } else {
-      router.replace(`/coffee/list?note=${value.join(",")}`);
-    }
+    const criteria = parseCriteriaFromQuery(
+      searchParams.get("nation"),
+      searchParams.get("note")
+    );
+    const next = buildListUrl({ ...criteria, notes: value });
+    router.replace(next);
   };
 
   return (

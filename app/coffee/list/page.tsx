@@ -1,13 +1,13 @@
-import {
-  getAllNationByCoffeeInfoList,
-  getAllNotesByCoffeeInfoList,
-} from "@/utils/coffee";
 import { getCoffeeInfoList } from "../../../utils/api";
 import { CoffeeLinkCard } from "./_component/CoffeeLinkCard";
 import CoffeeFilter from "./_component/CoffeeFilter";
-import { Coffee } from "@/schema/coffee";
 import MobileCoffeeFilter from "./_component/MobileCoffeeFilter";
-import { COFFEE_NOTE_DICT } from "@/constants/coffee";
+import {
+  applyCoffeeFilters,
+  computeAvailableNations,
+  computeAvailableNotes,
+  parseCriteriaFromQuery,
+} from "@/utils/coffee-filters";
 
 interface Props {
   searchParams: {
@@ -21,61 +21,29 @@ export default async function CoffeeListPage({
 }: Props) {
   const coffeeInfoList = await getCoffeeInfoList();
 
-  const selectedNations = nation ? nation.split(",") : [];
-  const selectedNotes = note ? note.split(",") : [];
+  // parse criteria from search params
+  const criteria = parseCriteriaFromQuery(nation, note);
 
-  const allNations = getAllNationByCoffeeInfoList(coffeeInfoList);
-  const allNotes = getAllNotesByCoffeeInfoList(
-    coffeeInfoList,
-    selectedNations.length > 0 ? selectedNations : allNations
-  );
+  // derive options using centralized utils
+  const allNations = computeAvailableNations(coffeeInfoList);
+  const allNotes = computeAvailableNotes(coffeeInfoList, criteria);
 
-  const filterByNations = (coffeeInfo: Coffee) => {
-    const hasSelectedNations = selectedNations.length > 0;
-
-    if (!coffeeInfo.nations) {
-      return false;
-    }
-
-    if (hasSelectedNations) {
-      return selectedNations.includes(coffeeInfo.nations);
-    }
-    return true;
-  };
-
-  const filterByNotes = (coffeeInfo: Coffee) => {
-    if (selectedNotes.length === 0) {
-      return true;
-    }
-
-    if (!coffeeInfo.notes) {
-      return false;
-    }
-
-    return coffeeInfo.notes.some(
-      (note) =>
-        selectedNotes.includes(COFFEE_NOTE_DICT[note]) ||
-        selectedNotes.includes(note)
-    );
-  };
-
-  const filteredCoffeeInfoList = coffeeInfoList
-    .filter(filterByNations)
-    .filter(filterByNotes);
+  // apply filters centrally
+  const filteredCoffeeInfoList = applyCoffeeFilters(coffeeInfoList, criteria);
 
   return (
     <>
       <CoffeeFilter
         allNations={allNations}
         allNotes={allNotes}
-        selectedNations={selectedNations}
-        selectedNotes={selectedNotes}
+        selectedNations={criteria.nations}
+        selectedNotes={criteria.notes}
       />
       <MobileCoffeeFilter
         allNations={allNations}
         allNotes={allNotes}
-        selectedNations={selectedNations}
-        selectedNotes={selectedNotes}
+        selectedNations={criteria.nations}
+        selectedNotes={criteria.notes}
       />
       {filteredCoffeeInfoList.map((coffeeInfo) => (
         <CoffeeLinkCard
