@@ -8,8 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useRouter, useSearchParams } from "next/navigation";
-import { buildListUrl, parseCriteriaFromQuery } from "@/utils/coffee-filters";
+import { useCoffeeFilters } from "@/hooks/use-coffee-filters";
 
 interface Props {
   allNations: string[];
@@ -24,34 +23,15 @@ export default function CoffeeFilter({
   selectedNations,
   selectedNotes,
 }: Props) {
-  const nationFilterButtonLabel =
-    selectedNations.length > 0
-      ? `나라별 필터 | ${selectedNations.join(", ")}`
-      : "나라별 필터";
-  const noteFilterButtonLabel =
-    selectedNotes.length > 0
-      ? `노트별 필터 | ${selectedNotes.join(", ")}`
-      : "노트별 필터";
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { setNations, setNotes, nationFilterButtonLabel, noteFilterButtonLabel } =
+    useCoffeeFilters();
 
   const handleNationChange = (value: string[]) => {
-    const criteria = parseCriteriaFromQuery(
-      searchParams.get("nation"),
-      searchParams.get("note")
-    );
-    const next = buildListUrl({ ...criteria, nations: value });
-    router.replace(next);
+    setNations(value);
   };
 
   const handleNoteChange = (value: string[]) => {
-    const criteria = parseCriteriaFromQuery(
-      searchParams.get("nation"),
-      searchParams.get("note")
-    );
-    const next = buildListUrl({ ...criteria, notes: value });
-    router.replace(next);
+    setNotes(value);
   };
 
   return (

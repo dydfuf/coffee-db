@@ -13,9 +13,8 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { buildListUrl, parseCriteriaFromQuery } from "@/utils/coffee-filters";
+import { useCoffeeFilters } from "@/hooks/use-coffee-filters";
 
 interface Props {
   allNations: string[];
@@ -34,30 +33,15 @@ export default function MobileCoffeeFilter({
     useState<string[]>(_selectedNations);
   const [selectedNotes, setSelectedNotes] = useState<string[]>(_selectedNotes);
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { setNations, setNotes, nationFilterButtonLabel, noteFilterButtonLabel } =
+    useCoffeeFilters();
 
   const onCloseNationsDrawer = () => {
-    const criteria = parseCriteriaFromQuery(
-      searchParams.get("nation"),
-      searchParams.get("note")
-    );
-    const next = buildListUrl({ ...criteria, nations: selectedNations });
-    router.replace(next);
+    setNations(selectedNations);
   };
   const onCloseNotesDrawer = () => {
-    const criteria = parseCriteriaFromQuery(
-      searchParams.get("nation"),
-      searchParams.get("note")
-    );
-    const next = buildListUrl({ ...criteria, notes: selectedNotes });
-    router.replace(next);
+    setNotes(selectedNotes);
   };
-
-  const nationFilterButtonLabel =
-    _selectedNations.length > 0 ? _selectedNations.join(", ") : "나라별 필터";
-  const noteFilterButtonLabel =
-    _selectedNotes.length > 0 ? _selectedNotes.join(", ") : "노트별 필터";
 
   return (
     <div className="grid grid-cols-2 gap-2 md:hidden sticky top-[57px] bg-background pb-4">
