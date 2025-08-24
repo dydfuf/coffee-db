@@ -4,8 +4,8 @@ import { updateSession } from "@/utils/supabase/middleware";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Admin access control
-  if (pathname.startsWith("/admin")) {
+  // Admin access control (admin pages and admin-only API)
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/crawl")) {
     const cookieName = process.env.ADMIN_COOKIE; // cookie name managed via env
     const expectedValue = process.env.ADMIN_COOKIE_VALUE; // expected cookie value managed via env
 
