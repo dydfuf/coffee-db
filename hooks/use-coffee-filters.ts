@@ -26,6 +26,12 @@ export function useCoffeeFilters() {
     router.replace(next);
   };
 
+  // 새로 추가: 모든 필터 초기화
+  const clearFilters = () => {
+    const next = buildListUrl({ nations: [], notes: [] });
+    router.replace(next);
+  };
+
   const nationFilterButtonLabel =
     criteria.nations.length > 0
       ? `나라별 필터 | ${criteria.nations.join(", ")}`
@@ -39,6 +45,7 @@ export function useCoffeeFilters() {
     criteria,
     setNations,
     setNotes,
+    clearFilters,
     nationFilterButtonLabel,
     noteFilterButtonLabel,
   } as const;

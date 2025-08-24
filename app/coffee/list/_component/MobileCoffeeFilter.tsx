@@ -33,7 +33,7 @@ export default function MobileCoffeeFilter({
     useState<string[]>(_selectedNations);
   const [selectedNotes, setSelectedNotes] = useState<string[]>(_selectedNotes);
 
-  const { setNations, setNotes, nationFilterButtonLabel, noteFilterButtonLabel } =
+  const { setNations, setNotes, clearFilters, nationFilterButtonLabel, noteFilterButtonLabel } =
     useCoffeeFilters();
 
   const onCloseNationsDrawer = () => {
@@ -45,6 +45,21 @@ export default function MobileCoffeeFilter({
 
   return (
     <div className="grid grid-cols-2 gap-2 md:hidden sticky top-[57px] bg-background pb-4">
+      <div className="col-span-2 flex items-center justify-between px-2 pt-2">
+        <span className="text-sm text-muted-foreground">필터</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            clearFilters();
+            setSelectedNations([]);
+            setSelectedNotes([]);
+          }}
+          title="모든 필터 초기화"
+        >
+          전체 초기화
+        </Button>
+      </div>
       <Drawer onClose={onCloseNationsDrawer}>
         <DrawerTrigger asChild>
           <Button>
@@ -62,7 +77,7 @@ export default function MobileCoffeeFilter({
                 type="multiple"
                 className="flex flex-wrap gap-2 justify-start"
                 onValueChange={setSelectedNations}
-                defaultValue={_selectedNations}
+                value={selectedNations}
               >
                 {allNations.map((nation) => (
                   <ToggleGroupItem
@@ -103,7 +118,7 @@ export default function MobileCoffeeFilter({
                   type="multiple"
                   className="flex flex-wrap gap-2 justify-start"
                   onValueChange={setSelectedNotes}
-                  defaultValue={_selectedNotes}
+                  value={selectedNotes}
                 >
                   {allNotes.map((note) => (
                     <ToggleGroupItem
