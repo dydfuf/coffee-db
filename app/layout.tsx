@@ -129,10 +129,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      style={{
-        fontFamily:
-          '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
-      }}
+      suppressHydrationWarning
     >
       <head>
         <link
@@ -141,18 +138,9 @@ export default function RootLayout({
           crossOrigin=""
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
-        <GoogleAnalytics gaId="G-DCEDCJ9EXD" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-        
-                gtag('config', 'G-DCEDCJ9EXD');
-        `,
-          }}
-        ></script>
+        {process.env.NODE_ENV === "production" && (
+          <GoogleAnalytics gaId="G-DCEDCJ9EXD" />
+        )}
       </head>
       <body className={`antialiased`}>
         <ThemeProvider
@@ -171,8 +159,8 @@ export default function RootLayout({
             </SessionCheck>
           </Suspense>
         </ThemeProvider>
-        <Analytics />
-        <SpeedInsights />
+        {process.env.NODE_ENV === "production" && <Analytics />}
+        {process.env.NODE_ENV === "production" && <SpeedInsights />}
       </body>
     </html>
   );
