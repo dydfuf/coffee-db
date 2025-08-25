@@ -7,7 +7,7 @@ export const insertCoffeeInfoRows = async (
   coffeeInfoList: Omit<Coffee, "id">[]
 ) => {
   console.log("insertCoffeeInfoRows");
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.from("coffee-info").insert(coffeeInfoList);
 

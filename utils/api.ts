@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "./supabase/server";
 
 export const getCoffeeInfoList = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("coffee-info")
@@ -19,7 +19,7 @@ export const getCoffeeInfoList = async () => {
 };
 
 export const getCoffeeInfoById = async (id: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("coffee-info")

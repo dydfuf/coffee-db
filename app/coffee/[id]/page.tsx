@@ -12,10 +12,8 @@ import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { getCoffeeInfoById } from "../../../utils/api";
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const { id } = params;
   const coffeeInfo = await getCoffeeInfoById(id);
 
@@ -36,11 +34,17 @@ export async function generateMetadata(
 }
 
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function page({ params: { id } }: Props) {
+export default async function page(props: Props) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   const coffeeInfo = await getCoffeeInfoById(id);
 
   const CoffeeInfoData = [

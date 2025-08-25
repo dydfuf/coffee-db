@@ -10,15 +10,20 @@ import {
 } from "@/utils/coffee-filters";
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     nation: string;
     note: string;
-  };
+  }>;
 }
 
-export default async function CoffeeListPage({
-  searchParams: { nation, note },
-}: Props) {
+export default async function CoffeeListPage(props: Props) {
+  const searchParams = await props.searchParams;
+
+  const {
+    nation,
+    note
+  } = searchParams;
+
   const coffeeInfoList = await getCoffeeInfoList();
 
   // parse criteria from search params
