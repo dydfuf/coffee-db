@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Admin access control (admin pages and admin-only API)
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api/crawl")) {
+  if (pathname.startsWith("/admin")) {
     const cookieName = process.env.ADMIN_COOKIE; // cookie name managed via env
     const expectedValue = process.env.ADMIN_COOKIE_VALUE; // expected cookie value managed via env
 
@@ -28,5 +28,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/coffee/suggestion", "/api/:path*", "/admin", "/admin/:path*"],
+  matcher: ["/coffee/suggestion", "/admin", "/admin/:path*"],
 };
